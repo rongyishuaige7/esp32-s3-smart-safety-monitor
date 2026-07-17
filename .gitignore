@@ -1,0 +1,31 @@
+# PlatformIO / ESP-IDF outputs
+.pio/
+build/
+managed_components/
+dependencies.lock
+
+# ESP-IDF local configuration and local network credentials
+sdkconfig
+sdkconfig.old
+main/local_config.h
+
+# IDE, OS and Python cache
+.vscode/
+.idea/
+__pycache__/
+*.py[cod]
+.DS_Store
+
+# Firmware, archives and private material
+*.bin
+*.elf
+*.map
+*.o
+*.a
+*.zip
+*.7z
+*.tar
+*.gz
+*.pem
+*.key
+.env

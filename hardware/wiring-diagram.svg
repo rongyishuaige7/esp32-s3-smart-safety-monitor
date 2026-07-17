@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="780" viewBox="0 0 1120 780" role="img" aria-labelledby="title desc">
+  <title id="title">基于 ESP32-S3 的多传感器智能安全监测系统：源码接口边界图</title>
+  <desc id="desc">这是基于源码的 GPIO 边界示意，不是 PCB 原理图或实物接线证明。所有执行器需独立低压驱动与共地。</desc>
+  <style>
+    .bg{fill:#fffaf5}.box{fill:#fff;stroke:#9a3412;stroke-width:2}.core{fill:#fed7aa;stroke:#9a3412;stroke-width:3}.risk{fill:#fff1f2;stroke:#be123c;stroke-width:2}.sensor{fill:#ecfeff;stroke:#0e7490;stroke-width:2}.line{stroke:#475569;stroke-width:2;fill:none}.label{font:600 17px sans-serif;fill:#1f2937}.small{font:14px sans-serif;fill:#475569}.warn{font:600 15px sans-serif;fill:#9f1239}
+  </style>
+  <rect class="bg" x="0" y="0" width="1120" height="780"/>
+  <text class="label" x="44" y="45">基于 ESP32-S3 的多传感器智能安全监测系统 — 源码接口边界图</text>
+  <text class="small" x="44" y="73">仅由当前公开源码推导；当前不是实物接线、传感器标定或安全认证证据。</text>
+  <rect class="core" x="415" y="250" width="290" height="215" rx="16"/>
+  <text class="label" x="466" y="300">ESP32-S3 DevKitC-1</text><text class="small" x="460" y="330">ESP-IDF · 3.3 V GPIO</text><text class="small" x="465" y="358">GPIO 1,2,4–18</text><text class="small" x="440" y="394">所有模块必须可靠共地</text><text class="small" x="452" y="422">执行器不能由 GPIO 供电</text>
+  <rect class="sensor" x="55" y="150" width="260" height="104" rx="12"/><text class="label" x="88" y="189">MQ-2 烟雾 AO</text><text class="small" x="88" y="218">GPIO1 · ADC1_CH0 · 原始值</text>
+  <rect class="sensor" x="55" y="290" width="260" height="104" rx="12"/><text class="label" x="88" y="329">MQ-5 气体 AO</text><text class="small" x="88" y="358">GPIO2 · ADC1_CH1 · 原始值</text>
+  <rect class="sensor" x="55" y="430" width="260" height="104" rx="12"/><text class="label" x="88" y="469">火焰 DO / HC-SR04</text><text class="small" x="88" y="498">GPIO4 · GPIO5/6</text><text class="warn" x="88" y="521">HC-SR04 5 V ECHO 须电平转换</text>
+  <rect class="sensor" x="55" y="570" width="260" height="104" rx="12"/><text class="label" x="88" y="609">SSD1306 OLED</text><text class="small" x="88" y="638">I²C GPIO11 SDA · GPIO12 SCL</text>
+  <path class="line" d="M315 202H415M315 342H415M315 482H415M315 622H415"/>
+  <rect class="risk" x="805" y="125" width="265" height="112" rx="12"/><text class="label" x="838" y="166">水泵 H 桥</text><text class="small" x="838" y="194">GPIO16 / GPIO17</text><text class="warn" x="828" y="218">独立低压驱动、供电、管路</text>
+  <rect class="risk" x="805" y="270" width="265" height="112" rx="12"/><text class="label" x="838" y="311">风扇 / L9110</text><text class="small" x="838" y="339">GPIO18 / GPIO8</text><text class="warn" x="828" y="363">不代表通风安全效果</text>
+  <rect class="risk" x="805" y="415" width="265" height="112" rx="12"/><text class="label" x="838" y="456">窗户 / 雷达舵机</text><text class="small" x="838" y="484">GPIO9 / GPIO10 · 50 Hz PWM</text><text class="warn" x="828" y="508">须独立供电并与控制器共地</text>
+  <rect class="box" x="805" y="560" width="265" height="104" rx="12"/><text class="label" x="838" y="601">蜂鸣器 / LED</text><text class="small" x="838" y="629">GPIO7（低电平有效）/ GPIO15</text>
+  <path class="line" d="M705 306H805M705 351H770V181H805M705 398H770V471H805M705 442H770V612H805"/>
+  <text class="warn" x="62" y="730">禁止将此教学原型用于火灾、燃气、自动灭火、通风安全、生命安全或生产控制决策。</text>
+  <text class="small" x="62" y="756">本地 SoftAP/HTTP（如自行配置）无认证、无 TLS，只能短时用于隔离可信网络。</text>
+</svg>

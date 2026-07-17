@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>智能安全监测系统</title>
+<style>
+:root{
+  --bg:#080c10;
+  --panel:#0d1420;
+  --border:#1a2a3a;
+  --accent:#00e5ff;
+  --accent2:#ff6b35;
+  --safe:#00ff88;
+  --warn:#ffcc00;
+  --danger:#ff2244;
+  --dim:#2a3a4a;
+  --text:#c8d8e8;
+  --muted:#4a6070;
+  --font-mono:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+  --font-ui:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-ui);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,229,255,.018) 2px,rgba(0,229,255,.018) 4px);
+  pointer-events:none;z-index:9999;
+}
+
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,229,255,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,255,.04) 1px,transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;z-index:0;
+}
+
+.shell{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh;padding:16px;gap:12px}
+
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+  padding-bottom:12px;
+}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{
+  width:36px;height:36px;
+  border:2px solid var(--accent);border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+  box-shadow:0 0 12px var(--accent),inset 0 0 8px rgba(0,229,255,.15);
+}
+.logo h1{font-size:1.4rem;font-weight:700;letter-spacing:.12em;color:#fff;text-transform:uppercase}
+.logo .sub{font-size:.7rem;color:var(--muted);font-family:var(--font-mono);letter-spacing:.1em}
+.conn{display:flex;align-items:center;gap:8px;font-size:.75rem;font-family:var(--font-mono);color:var(--muted)}
+.conn-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);transition:background .4s}
+.conn-dot.live{background:var(--safe);box-shadow:0 0 6px var(--safe);animation:pulse-dot 2s infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
+.ts{font-size:.7rem;font-family:var(--font-mono);color:var(--muted)}
+
+.alert-banner{
+  border:1px solid var(--border);border-radius:6px;
+  padding:12px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--panel);
+  transition:border-color .3s,background .3s;
+  position:relative;overflow:hidden;
+}
+.alert-banner::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:4px;
+  background:var(--safe);transition:background .3s;
+}
+.alert-banner.warn::before{background:var(--warn)}
+.alert-banner.danger::before{background:var(--danger);animation:flicker .4s infinite alternate}
+@keyframes flicker{from{opacity:1}to{opacity:.5}}
+.alert-banner.danger{border-color:rgba(255,34,68,.4);background:rgba(255,34,68,.06)}
+.alert-banner.warn{border-color:rgba(255,204,0,.3);background:rgba(255,204,0,.05)}
+
+.state-label{
+  font-size:1.6rem;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;transition:color .3s;
+}
+.state-label.safe{color:var(--safe)}
+.state-label.warn{color:var(--warn)}
+.state-label.danger{color:var(--danger)}
+.state-detail{font-size:.8rem;font-family:var(--font-mono);color:var(--muted)}
+.uptime{font-size:.75rem;font-family:var(--font-mono);color:var(--muted);text-align:right}
+
+.grid{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:12px;flex:1}
+@media(max-width:900px){.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:580px){.grid{grid-template-columns:1fr}}
+
+.card{
+  background:var(--panel);border:1px solid var(--border);border-radius:8px;
+  padding:16px;display:flex;flex-direction:column;gap:10px;
+  position:relative;overflow:hidden;
+}
+.card::after{
+  content:'';position:absolute;top:0;right:0;width:60px;height:60px;
+  background:radial-gradient(circle at top right,rgba(0,229,255,.05),transparent 70%);
+  pointer-events:none;
+}
+.card-title{
+  font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--muted);font-family:var(--font-mono);
+  display:flex;align-items:center;gap:6px;
+}
+.card-title::before{content:'▸';color:var(--accent);font-size:.6rem}
+
+.gauge-wrap{display:flex;flex-direction:column;gap:6px}
+.gauge-header{display:flex;justify-content:space-between;align-items:baseline}
+.gauge-name{font-size:.85rem;font-weight:600;letter-spacing:.05em}
+.gauge-val{font-size:1.5rem;font-weight:700;font-family:var(--font-mono);color:var(--accent);transition:color .3s}
+.gauge-val.warn{color:var(--warn)}
+.gauge-val.danger{color:var(--danger)}
+.gauge-max{font-size:.65rem;color:var(--muted)}
+.bar-track{height:6px;background:var(--dim);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;width:0%;transition:width .6s,background .3s;background:var(--accent)}
+.bar-fill.warn{background:var(--warn)}
+.bar-fill.danger{background:var(--danger)}
+.thresholds{display:flex;gap:4px;font-size:.6rem;color:var(--muted);font-family:var(--font-mono)}
+.threshold-mark{padding:1px 5px;border-radius:2px;border:1px solid var(--dim)}
+.threshold-mark.active{border-color:var(--accent);color:var(--accent)}
+
+.bool-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bool-item{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 10px;background:rgba(0,0,0,.3);
+  border-radius:6px;border:1px solid var(--border);
+  transition:border-color .3s,background .3s;
+}
+.bool-item.on{border-color:rgba(0,229,255,.4);background:rgba(0,229,255,.07)}
+.bool-item.on .bi-dot{background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.bool-item.on .bi-name{color:#fff}
+.bool-item.alarm-on{border-color:rgba(255,34,68,.5);background:rgba(255,34,68,.1)}
+.bool-item.alarm-on .bi-dot{background:var(--danger);box-shadow:0 0 8px var(--danger)}
+.bi-dot{width:8px;height:8px;border-radius:50%;background:var(--dim);transition:background .3s,box-shadow .3s;flex-shrink:0}
+.bi-icon{font-size:1rem;width:20px;text-align:center;opacity:.6;transition:opacity .3s}
+.bool-item.on .bi-icon,.bool-item.alarm-on .bi-icon{opacity:1}
+.bi-name{font-size:.8rem;font-weight:600;letter-spacing:.04em;color:var(--muted);transition:color .3s}
+
+.dist-big{
+  font-size:3.2rem;font-weight:700;font-family:var(--font-mono);
+  color:var(--accent);text-align:center;line-height:1;transition:color .3s;
+}
+.dist-unit{font-size:1rem;color:var(--muted);font-weight:400}
+.dist-bar-wrap{display:flex;flex-direction:column;gap:4px}
+.dist-label{display:flex;justify-content:space-between;font-size:.65rem;font-family:var(--font-mono);color:var(--muted)}
+.dist-alert{font-size:.75rem;color:var(--danger);text-align:center;font-family:var(--font-mono);opacity:0;transition:opacity .3s}
+.dist-alert.visible{opacity:1;animation:blink .8s infinite alternate}
+@keyframes blink{from{opacity:1}to{opacity:.3}}
+
+.radar-card{grid-row:span 2}
+@media(max-width:900px){.radar-card{grid-row:auto}}
+.radar-canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;min-height:220px}
+canvas#radar{display:block}
+
+.chart-wrap{flex:1;position:relative;min-height:80px}
+canvas#chart{position:absolute;inset:0;width:100%!important;height:100%!important}
+.chart-labels{display:flex;justify-content:space-between;font-size:.6rem;font-family:var(--font-mono);color:var(--muted);margin-top:2px}
+
+footer{
+  text-align:center;font-size:.65rem;font-family:var(--font-mono);color:var(--muted);
+  border-top:1px solid var(--border);padding-top:10px;letter-spacing:.1em;
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header>
+    <div class="logo">
+      <div class="logo-icon">&#9889;</div>
+      <div>
+        <h1>Safety Monitor</h1>
+        <div class="sub">ESP32-S3 &middot; 智能安全监测系统</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+      <div class="conn"><div class="conn-dot" id="connDot"></div><span id="connLabel">等待本地状态流…</span></div>
+      <div class="ts" id="ts">--:--:--</div>
+    </div>
+  </header>
+
+  <div class="alert-banner" id="banner">
+    <div>
+      <div class="state-label" id="stateLabel">WAITING &middot; 等待数据</div>
+      <div class="state-detail" id="stateDetail">尚未收到设备状态；不代表环境安全</div>
+    </div>
+    <div class="uptime">PAGE TIME<br/><span id="uptimeSec">--</span></div>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-title">MQ-2 烟雾传感器</div>
+      <div class="gauge-wrap">
+        <div class="gauge-header">
+          <span class="gauge-name">Smoke / RAW</span>
+          <span class="gauge-val" id="mq2Val">--</span>
+          <span class="gauge-max">/ 4095</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" id="mq2Bar"></div></div>
+        <div class="thresholds">
+          <span class="threshold-mark" id="sl1">L1 &ge;800</span>
+          <span class="threshold-mark" id="sl2">L2 &ge;1500</span>
+          <span class="threshold-mark" id="sl3">L3 &ge;2200</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">MQ-5 可燃气体传感器</div>
+      <div class="gauge-wrap">
+        <div class="gauge-header">
+          <span class="gauge-name">Gas / RAW</span>
+          <span class="gauge-val" id="mq5Val">--</span>
+          <span class="gauge-max">/ 4095</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" id="mq5Bar"></div></div>
+        <div class="thresholds">
+          <span class="threshold-mark" id="gasAlarm">RAW &ge;2000</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card radar-card">
+      <div class="card-title">HC-SR04 超声波雷达</div>
+      <div class="radar-canvas-wrap">
+        <canvas id="radar" width="240" height="160"></canvas>
+      </div>
+      <div class="dist-bar-wrap">
+        <div class="dist-label">
+          <span>0 cm</span>
+          <span id="distBarLabel">-- cm</span>
+          <span>50 cm</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" id="distBar" style="background:var(--accent2)"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">距离读数</div>
+      <div style="text-align:center;padding:8px 0">
+        <div class="dist-big" id="distBig">--<span class="dist-unit"> cm</span></div>
+      </div>
+      <div class="dist-alert" id="distAlert">&#9888; NEAR OBJECT DETECTED</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">执行器状态</div>
+      <div class="bool-grid">
+        <div class="bool-item" id="bi-buzzer"><div class="bi-dot"></div><span class="bi-icon">&#128276;</span><span class="bi-name">蜂鸣器</span></div>
+        <div class="bool-item" id="bi-led"><div class="bi-dot"></div><span class="bi-icon">&#128161;</span><span class="bi-name">报警灯</span></div>
+        <div class="bool-item" id="bi-pump"><div class="bi-dot"></div><span class="bi-icon">&#128167;</span><span class="bi-name">水泵</span></div>
+        <div class="bool-item" id="bi-fan"><div class="bi-dot"></div><span class="bi-icon">&#127744;</span><span class="bi-name">风扇</span></div>
+        <div class="bool-item" id="bi-window"><div class="bi-dot"></div><span class="bi-icon">&#129695;</span><span class="bi-name">开窗</span></div>
+        <div class="bool-item" id="bi-flame"><div class="bi-dot"></div><span class="bi-icon">&#128293;</span><span class="bi-name">火焰</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">传感器历史 (60s)</div>
+      <div class="chart-wrap">
+        <canvas id="chart"></canvas>
+      </div>
+      <div class="chart-labels">
+        <span>MQ2</span>
+        <span style="color:var(--accent2)">MQ5</span>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>ESP32-S3 &middot; SMART SAFETY MONITOR &middot; 本地教学状态页 &middot; 无认证 / 无 TLS</footer>
+</div>
+
+<script>
+/* ── 雷达画布 ── */
+const radarCanvas = document.getElementById('radar');
+const rCtx = radarCanvas.getContext('2d');
+const RW = radarCanvas.width, RH = radarCanvas.height;
+const RCX = RW / 2, RCY = RH - 10, RMAX = RH - 20;
+const TRAIL_LEN = 24;
+
+let sweepAngle = 0;
+let sweepDir = 1;
+const trail = Array(TRAIL_LEN).fill(0);
+let trailHead = 0;
+let distCm = -1;
+
+function drawRadar() {
+  rCtx.clearRect(0, 0, RW, RH);
+  rCtx.fillStyle = '#060c10';
+  rCtx.fillRect(0, 0, RW, RH);
+
+  [RMAX/3, RMAX*2/3, RMAX].forEach(function(r) {
+    rCtx.beginPath();
+    rCtx.arc(RCX, RCY, r, Math.PI, 0);
+    rCtx.strokeStyle = 'rgba(0,229,255,0.2)';
+    rCtx.lineWidth = 1;
+    rCtx.stroke();
+  });
+
+  [30,60,90,120,150].forEach(function(a) {
+    var rad = a * Math.PI / 180;
+    rCtx.beginPath();
+    rCtx.moveTo(RCX, RCY);
+    rCtx.lineTo(RCX + Math.cos(rad)*RMAX, RCY - Math.sin(rad)*RMAX);
+    rCtx.strokeStyle = 'rgba(0,229,255,0.12)';
+    rCtx.lineWidth = 1;
+    rCtx.setLineDash([3,5]);
+    rCtx.stroke();
+    rCtx.setLineDash([]);
+  });
+
+  rCtx.beginPath();
+  rCtx.moveTo(0, RCY);
+  rCtx.lineTo(RW, RCY);
+  rCtx.strokeStyle = 'rgba(0,229,255,0.3)';
+  rCtx.lineWidth = 1;
+  rCtx.stroke();
+
+  for (var i = 0; i < TRAIL_LEN; i++) {
+    var idx = (trailHead + i) % TRAIL_LEN;
+    var trad = trail[idx] * Math.PI / 180;
+    var alpha = (i / TRAIL_LEN) * 0.5;
+    rCtx.strokeStyle = 'rgba(0,229,255,' + alpha + ')';
+    rCtx.lineWidth = 1;
+    rCtx.beginPath();
+    rCtx.moveTo(RCX, RCY);
+    var frac = i / TRAIL_LEN;
+    rCtx.lineTo(
+      RCX + Math.cos(trad) * RMAX * frac,
+      RCY - Math.sin(trad) * RMAX * frac
+    );
+    rCtx.stroke();
+  }
+
+  var rad = sweepAngle * Math.PI / 180;
+  var grd = rCtx.createLinearGradient(RCX, RCY,
+    RCX + Math.cos(rad)*RMAX, RCY - Math.sin(rad)*RMAX);
+  grd.addColorStop(0, 'rgba(0,229,255,0)');
+  grd.addColorStop(1, 'rgba(0,229,255,0.95)');
+  rCtx.beginPath();
+  rCtx.moveTo(RCX, RCY);
+  rCtx.lineTo(RCX + Math.cos(rad)*RMAX, RCY - Math.sin(rad)*RMAX);
+  rCtx.strokeStyle = grd;
+  rCtx.lineWidth = 2;
+  rCtx.stroke();
+
+  if (distCm > 0 && distCm < 50) {
+    var t = distCm / 50;
+    var pr = t * RMAX;
+    var px = RCX + Math.cos(rad)*pr;
+    var py = RCY - Math.sin(rad)*pr;
+    rCtx.fillStyle = '#ff6b35';
+    rCtx.shadowColor = '#ff6b35';
+    rCtx.shadowBlur = 8;
+    rCtx.fillRect(px-3, py-3, 6, 6);
+    rCtx.shadowBlur = 0;
+  }
+
+  rCtx.beginPath();
+  rCtx.arc(RCX, RCY, 3, 0, Math.PI*2);
+  rCtx.fillStyle = '#00e5ff';
+  rCtx.fill();
+}
+
+function animateRadar() {
+  trail[trailHead] = sweepAngle;
+  trailHead = (trailHead + 1) % TRAIL_LEN;
+  sweepAngle += sweepDir * 1.5;
+  if (sweepAngle >= 180) { sweepAngle = 180; sweepDir = -1; }
+  if (sweepAngle <= 0)   { sweepAngle = 0;   sweepDir = 1; }
+  drawRadar();
+  requestAnimationFrame(animateRadar);
+}
+animateRadar();
+
+/* ── 历史曲线 ── */
+const chartCanvas = document.getElementById('chart');
+const cCtx = chartCanvas.getContext('2d');
+const HIST = 60;
+var mq2Hist = [];
+var mq5Hist = [];
+for (var _i = 0; _i < HIST; _i++) { mq2Hist.push(0); mq5Hist.push(0); }
+
+function drawChart() {
+  var W = chartCanvas.offsetWidth || 200;
+  var H = chartCanvas.offsetHeight || 80;
+  chartCanvas.width = W; chartCanvas.height = H;
+  cCtx.clearRect(0, 0, W, H);
+
+  cCtx.strokeStyle = 'rgba(255,255,255,0.05)';
+  cCtx.lineWidth = 1;
+  for (var gi = 0; gi <= 4; gi++) {
+    var gy = H * gi / 4;
+    cCtx.beginPath(); cCtx.moveTo(0, gy); cCtx.lineTo(W, gy); cCtx.stroke();
+  }
+
+  function plotLine(data, color) {
+    cCtx.beginPath();
+    cCtx.strokeStyle = color;
+    cCtx.lineWidth = 1.5;
+    for (var j = 0; j < data.length; j++) {
+      var x = (j / (HIST - 1)) * W;
+      var y = H - (data[j] / 4095) * H;
+      if (j === 0) cCtx.moveTo(x, y);
+      else cCtx.lineTo(x, y);
+    }
+    cCtx.stroke();
+  }
+  plotLine(mq2Hist, 'rgba(0,229,255,0.8)');
+  plotLine(mq5Hist, 'rgba(255,107,53,0.8)');
+}
+
+/* ── 运行时间 ── */
+var uptimeSec = 0;
+setInterval(function() {
+  uptimeSec++;
+  var h = String(Math.floor(uptimeSec/3600)).padStart(2,'0');
+  var m = String(Math.floor(uptimeSec%3600/60)).padStart(2,'0');
+  var s = String(uptimeSec%60).padStart(2,'0');
+  document.getElementById('uptimeSec').textContent = h + ':' + m + ':' + s;
+}, 1000);
+
+/* ── 辅助函数 ── */
+function setGauge(valId, barId, value, max) {
+  var valEl = document.getElementById(valId);
+  var barEl = document.getElementById(barId);
+  valEl.textContent = value;
+  var pct = Math.min(100, (value / max) * 100);
+  barEl.style.width = pct + '%';
+  if (pct > 73)      { valEl.className='gauge-val danger'; barEl.className='bar-fill danger'; }
+  else if (pct > 48) { valEl.className='gauge-val warn';   barEl.className='bar-fill warn'; }
+  else               { valEl.className='gauge-val';        barEl.className='bar-fill'; }
+}
+
+function setBool(id, on, isAlarm) {
+  var el = document.getElementById('bi-' + id);
+  if (!el) return;
+  if (on && isAlarm) el.className = 'bool-item alarm-on';
+  else if (on)       el.className = 'bool-item on';
+  else               el.className = 'bool-item';
+}
+
+function setText(id, val) {
+  document.getElementById(id).textContent = val;
+}
+
+/* ── 应用数据 ── */
+var stateMap = {
+  SAFE:  { cls:'safe',   text:'NORMAL \u00b7 \u539f\u59cb\u503c\u672a\u8d85\u961f', detail:'教学原型：不代表环境安全', banner:'' },
+  SMOKE: { cls:'warn',   text:'SMOKE \u00b7 \u70df\u96fe', detail:'原始采样达到代码阈值；请人工核实', banner:'warn' },
+  GAS:   { cls:'danger', text:'GAS \u00b7 \u6c14\u4f53', detail:'原始采样达到代码阈值；请人工核实', banner:'danger' },
+  FIRE:  { cls:'danger', text:'FLAME \u00b7 \u706b\u7130', detail:'模块输入触发；不是消防告警结论', banner:'danger' },
+};
+
+function applyState(s) {
+  var m = stateMap[s] || stateMap.SAFE;
+  var sl = document.getElementById('stateLabel');
+  sl.className = 'state-label ' + m.cls;
+  sl.textContent = m.text;
+  document.getElementById('stateDetail').textContent = m.detail;
+  document.getElementById('banner').className = 'alert-banner ' + m.banner;
+}
+
+function applyData(d) {
+  var now = new Date();
+  document.getElementById('ts').textContent = now.toTimeString().slice(0,8);
+
+  distCm = d.dist;
+
+  setGauge('mq2Val', 'mq2Bar', d.mq2, 4095);
+  setGauge('mq5Val', 'mq5Bar', d.mq5, 4095);
+
+  var sl = d.smoke_level;
+  document.getElementById('sl1').className = 'threshold-mark' + (sl>=1?' active':'');
+  document.getElementById('sl2').className = 'threshold-mark' + (sl>=2?' active':'');
+  document.getElementById('sl3').className = 'threshold-mark' + (sl>=3?' active':'');
+  document.getElementById('gasAlarm').className = 'threshold-mark' + (d.gas_danger?' active':'');
+
+  var distEl = document.getElementById('distBig');
+  var dv = (d.dist > 0) ? String(Math.round(d.dist)) : '--';
+  distEl.textContent = '';
+  var numNode = document.createTextNode(dv);
+  var unitSpan = document.createElement('span');
+  unitSpan.className = 'dist-unit';
+  unitSpan.textContent = ' cm';
+  distEl.appendChild(numNode);
+  distEl.appendChild(unitSpan);
+  distEl.style.color = (d.dist > 0 && d.dist <= 30) ? 'var(--danger)' : 'var(--accent)';
+
+  document.getElementById('distBarLabel').textContent = d.dist > 0 ? d.dist.toFixed(1)+' cm' : '-- cm';
+  document.getElementById('distBar').style.width =
+    (d.dist > 0 ? Math.min(100, d.dist / 50 * 100) : 0) + '%';
+
+  var da = document.getElementById('distAlert');
+  da.className = 'dist-alert' + ((d.dist > 0 && d.dist <= 30) ? ' visible' : '');
+
+  setBool('buzzer', d.buzzer, true);
+  setBool('led',    d.led,    true);
+  setBool('pump',   d.pump,   true);
+  setBool('fan',    d.fan,    false);
+  setBool('window', d.window, false);
+  setBool('flame',  d.flame,  true);
+
+  mq2Hist.shift(); mq2Hist.push(d.mq2);
+  mq5Hist.shift(); mq5Hist.push(d.mq5);
+  drawChart();
+
+  applyState(d.state);
+}
+
+/* ── SSE 连接 ── */
+var connDot = document.getElementById('connDot');
+var connLabel = document.getElementById('connLabel');
+
+function connect() {
+  var es = new EventSource('/api/status');
+  es.onopen = function() {
+    connDot.className = 'conn-dot live';
+    connLabel.textContent = '\u5df2\u8fde\u63a5';
+  };
+  es.onmessage = function(e) {
+    try { applyData(JSON.parse(e.data)); } catch(err) {}
+  };
+  es.onerror = function() {
+    connDot.className = 'conn-dot';
+    connLabel.textContent = '\u65ad\u5f00 \u2014 \u91cd\u8fde\u4e2d\u2026';
+    es.close();
+    setTimeout(connect, 3000);
+  };
+}
+
+var host = window.location.hostname;
+if (host === 'localhost' || host === '127.0.0.1' || window.location.protocol === 'file:') {
+  connLabel.textContent = '静态预览：未连接设备';
+} else {
+  connect();
+}
+</script>
+</body>
+</html>

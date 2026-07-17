@@ -1,0 +1,20 @@
+idf_component_register(
+    SRCS
+        "main.c"
+        "sensor_adc.c"
+        "sensor_mq2.c"
+        "sensor_mq5.c"
+        "sensor_flame.c"
+        "sensor_ultrasonic.c"
+        "actuator_ctrl.c"
+        "servo_ctrl.c"
+        "motor_ctrl.c"
+        "alarm_logic.c"
+        "oled_display.c"
+        "radar_scan.c"
+        "font_glcd.c"
+        "web_server.c"
+        "${CMAKE_SOURCE_DIR}/.pio/generated/web_index_embed.c"
+    INCLUDE_DIRS
+        "."
+)
