@@ -24,3 +24,9 @@ ESP32-S3 PlatformIO / ESP-IDF 固件构建已验证
 ```
 
 不得把本仓标记为：消防/燃气报警已验证、自动灭火已验证、通风安全、传感器准确、当前硬件已验证、生产就绪、SYSTEM ONLINE 或任何等价表述。
+
+## Historical media and EDA added on 2026-07-18
+
+historical EDA derivative(s). See [MEDIA_EVIDENCE](MEDIA_EVIDENCE.md) for dates, sanitization, omissions, and evidence limits.
+
+This publication update adds historical evidence only. Current hardware re-test not run.

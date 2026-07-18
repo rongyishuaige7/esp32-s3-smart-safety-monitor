@@ -9,6 +9,13 @@
 > [!CAUTION]
 > 这是本科软硬件学习原型，**不是火灾报警器、可燃气体报警器、自动灭火系统、通风安全系统、生命安全设备或生产控制设备**。MQ-2/MQ-5 原始 ADC 值、火焰模块输入和代码阈值不能替代人工核实、合规检测、报警送达或紧急处置。遇到真实火情、疑似燃气泄漏或其他危险，请立刻离开风险区域并联系当地专业应急服务。
 
+## Historical material evidence (2026-07-18 publication)
+
+historical EDA derivative(s). See [MEDIA_EVIDENCE](docs/MEDIA_EVIDENCE.md) for dates, sanitization, omissions, and evidence limits.
+
+Historical media/EDA do not prove that the current public commit was flashed or re-tested on hardware. **Current hardware re-test not run.**
+
+
 ## 当前证据
 
 ```text

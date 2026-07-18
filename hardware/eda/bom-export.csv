@@ -1,0 +1,13 @@
+name,designator,footprint,quantity,part_number,manufacturer
+水泵模块,CN1,CONN-TH_B2B-XH-A-LF-SN,1,-,JST Sales America
+发光二极管,D1,发光二极管LED,1,1N4007W,BLUE ROCKET
+L9110风扇模块,H1,HDR-4X1/2.54,1,Header-Female-2.54_1x4,ReliaPro
+0.96寸OLED屏幕 COPY,M1,OLED封装1,1,,泉源电子
+220Ω,R2,RES-TH_BD6.0-L17.5-P21.50-D0.8,1,KNP5WS-22Ω±5% T,CCO(千志电子)
+MQ2模块,U1,MQ2模块,1,,
+MQ5模块,U2,MQ2模块,1,,
+火焰传感器,U3,火焰传感器封装,1,,
+SG90,U4,SG90,1,,
+HC-SR04模块,U5,HC-SR04模块,1,,
+有源蜂鸣器模块,U6,有源蜂鸣器模块,1,,
+果云版ESP32-S3-N16R8,U7,张小黑-ESP32S3-果云版,1,zhangxiaohei,zhangxiaohei
