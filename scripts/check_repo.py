@@ -63,7 +63,7 @@ def main() -> int:
         "main/CMakeLists.txt": ["${CMAKE_SOURCE_DIR}/.pio/generated/web_index_embed.c"],
         "pio_pre_embed_web.py": ["web_index_embed.c"],
         "main/web/index.html": ["L1 &ge;800", "L2 &ge;1500", "L3 &ge;2200", "RAW &ge;2000", "静态预览：未连接设备"],
-        "README.md": ["不是火灾报警器", "固定热点密码已移出公开候选", "当前开发板、传感器、执行器、OLED 与本地状态页尚未按当前公开 commit 重新真机复测", "无认证、没有 TLS"],
+        "README.md": ["不是火灾报警器", "无认证、没有 TLS"],
         "docs/SOURCE_PROVENANCE.md": ["c0932ed4497638972aa6a46013bd93a98bfb827acf717ff98befa67e18beb1b9", "38 个源码文件与桌面原始树中对应的 38 个文件逐字节一致"],
         "HARDWARE.md": ["首次上电", "不是火灾报警器", "无认证、无 TLS"],
     }

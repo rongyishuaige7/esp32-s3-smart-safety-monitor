@@ -13,22 +13,6 @@
 
 相关 EDA 文件已整理，文件处理说明见 [MEDIA_EVIDENCE](docs/MEDIA_EVIDENCE.md)。
 
-
-
-## 当前证据
-
-```text
-源码来源已确认
-固定热点密码已移出公开候选
-无硬件源码与发布契约已通过
-ESP32-S3 PlatformIO / ESP-IDF 固件构建已验证
-当前开发板、传感器、执行器、OLED 与本地状态页尚未按当前公开 commit 重新真机复测
-```
-
-本仓的 CI 不烧录硬件、不连接实物网络、不测量烟雾/气体/火焰、不运行水泵/风扇/舵机，也不证明任何安全效果。完整状态见 [项目状态](docs/PROJECT_STATUS.md) 与 [验证说明](docs/VERIFICATION.md)。
-
-2026-07-17 的本地隔离构建使用 ESP-IDF `5.5.3`：RAM `38208 / 327680`（11.7%），Flash `862753 / 1048576`（82.3%）。这只是候选固件的构建容量证据；最终公开证据将以默认分支 exact HEAD 的 GitHub Actions 为准。
-
 ## 原型学习范围
 
 - ESP32-S3、ESP-IDF、FreeRTOS 任务与互斥共享状态；
@@ -84,7 +68,7 @@ pio run
 bash scripts/verify.sh
 ```
 
-若要烧录，先阅读 [HARDWARE.md](HARDWARE.md) 和 [真机复测清单](docs/VERIFICATION.md)。**首次通电时不要连接水泵、风扇、舵机或任何高风险负载；原型启动自检会依次驱动这些接口。**
+若要烧录，先阅读 [HARDWARE.md](HARDWARE.md) 和 [构建说明](docs/VERIFICATION.md)。**首次通电时不要连接水泵、风扇、舵机或任何高风险负载；原型启动自检会依次驱动这些接口。**
 
 ## 本地网络状态页
 
