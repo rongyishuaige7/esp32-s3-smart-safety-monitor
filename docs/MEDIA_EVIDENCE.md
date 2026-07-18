@@ -1,27 +1,27 @@
-# Media and EDA evidence
+# 历史素材与 EDA 证据
 
-> Publication review: 2026-07-18
+> 发布审查：2026-07-18
 
-## Source and handling
+## 来源与处理
 
-- Authoritative originals remain unchanged in the local Hardware Lab material center.
-- This repository contains reviewable, sanitized derivatives only; it does not contain or modify the authoritative originals.
-- Media/EDA prove only the narrow historical facts stated below. They do **not** prove that the current public commit was flashed, run, electrically reviewed, or re-tested on physical hardware.
-- No physical-device re-test was run in this publication pass.
+- 本地 Hardware Lab 素材中心中的权威原件保持不变。
+- 本仓库仅包含可审查的脱敏衍生文件；不包含、不修改权威原件。
+- 照片、截图或 EDA 仅证明下文明确列出的有限历史事实；它们**不**证明当前公开提交已烧录、运行、完成电气审查或真机复测。
+- 本次发布未进行真机复测。
 
-## Published derivatives
+## 已公开的脱敏衍生文件
 
-| Public path | Historical date / source date | Sanitization | Narrow evidence boundary |
+| 公开路径 | 历史日期 / 来源日期 | 脱敏处理 | 有限证据边界 |
 |:--|:--|:--|:--|
-| `hardware/eda/schematic.pdf` | Export supplied 2026-07-18 | PDF metadata removed from a copy | Historical EDA export. The schematic shows one SG90 on GPIO9 while current source defines two servos on GPIO9 and GPIO10; treat the EDA as incomplete and not as current wiring authority. |
-| `hardware/eda/pcb-preview.pdf` | Export supplied 2026-07-18 | PDF metadata removed from a copy | Historical EDA export. The schematic shows one SG90 on GPIO9 while current source defines two servos on GPIO9 and GPIO10; treat the EDA as incomplete and not as current wiring authority. |
-| `hardware/eda/bom-export.csv` | Export supplied 2026-07-18 | Converted from UTF-16LE tabular export to UTF-8 CSV; supplier/store/price fields omitted | Historical EDA export. The schematic shows one SG90 on GPIO9 while current source defines two servos on GPIO9 and GPIO10; treat the EDA as incomplete and not as current wiring authority. |
-| `hardware/eda/gerber/` | Export supplied 2026-07-18 | Extracted Gerber/Drill members from a copy; third-party order-instruction text omitted | Historical EDA export. The schematic shows one SG90 on GPIO9 while current source defines two servos on GPIO9 and GPIO10; treat the EDA as incomplete and not as current wiring authority. |
+| `hardware/eda/schematic.pdf` | 2026-07-18 提供的导出文件 | 从副本移除 PDF 元数据 | 历史 EDA 导出。原理图显示 GPIO9 上只有一个 SG90，而当前源码定义 GPIO9 和 GPIO10 两个舵机；应将该 EDA 视为不完整，不能作为当前接线权威。 |
+| `hardware/eda/pcb-preview.pdf` | 2026-07-18 提供的导出文件 | 从副本移除 PDF 元数据 | 历史 EDA 导出。原理图显示 GPIO9 上只有一个 SG90，而当前源码定义 GPIO9 和 GPIO10 两个舵机；应将该 EDA 视为不完整，不能作为当前接线权威。 |
+| `hardware/eda/bom-export.csv` | 2026-07-18 提供的导出文件 | 从 UTF-16LE 表格导出转换为 UTF-8 CSV；已省略供应商、店铺和价格字段 | 历史 EDA 导出。原理图显示 GPIO9 上只有一个 SG90，而当前源码定义 GPIO9 和 GPIO10 两个舵机；应将该 EDA 视为不完整，不能作为当前接线权威。 |
+| `hardware/eda/gerber/` | 2026-07-18 提供的导出文件 | 从副本解包 Gerber/钻孔成员；已省略第三方下单说明文本 | 历史 EDA 导出。原理图显示 GPIO9 上只有一个 SG90，而当前源码定义 GPIO9 和 GPIO10 两个舵机；应将该 EDA 视为不完整，不能作为当前接线权威。 |
 
-## Rejected or omitted material
+## 拒绝或未公开的材料
 
-Files not listed above were not copied into this repository. Typical reasons include a duplicate/misfiled document, private identifiers, stale UI semantics, incomplete wiring information, or weak value relative to the public evidence boundary. The original local files remain unchanged.
+未列于上表的文件没有复制到本仓库。常见原因包括重复或错投文件、私人标识、过时界面语义、接线信息不完整，或相对公开证据边界的价值不足。本地原件保持不变。
 
-## Status rule
+## 状态规则
 
-Current hardware re-test not run. Historical media or EDA must not be promoted to current-commit hardware verification.
+当前未进行真机复测。历史照片、截图或 EDA 不得提升为当前提交的真机验证证据。
