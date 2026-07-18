@@ -32,4 +32,4 @@ ESP32-S3 · ESP-IDF · PlatformIO · FreeRTOS · MQ-2 · MQ-5 · SSD1306 · HC-S
 
 填入 Hardware Lab 前，必须将 `head_sha`、固定 Actions URL 与最终公开仓 default-branch exact HEAD 同步；线上 CI 完成前不得写成构建证据已通过。
 
-- **历史媒体 / EDA：** 已加入经脱敏的历史衍生材料；范围和版本差异见 [`MEDIA_EVIDENCE.md`](MEDIA_EVIDENCE.md)。它们不证明当前公开提交已完成真机复测。
+- **项目素材：** 已补充项目照片、界面截图和相关资料；范围和版本差异见 [`MEDIA_EVIDENCE.md`](MEDIA_EVIDENCE.md)。
