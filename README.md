@@ -4,7 +4,6 @@
 
 [![Validate](https://github.com/rongyishuaige7/esp32-s3-smart-safety-monitor/actions/workflows/validate.yml/badge.svg)](https://github.com/rongyishuaige7/esp32-s3-smart-safety-monitor/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/Code-MIT-f97316.svg)](LICENSE)
-[![Hardware retest](https://img.shields.io/badge/hardware-not%20retested-6e7781.svg)](docs/PROJECT_STATUS.md)
 
 > [!CAUTION]
 > 这是本科软硬件学习原型，**不是火灾报警器、可燃气体报警器、自动灭火系统、通风安全系统、生命安全设备或生产控制设备**。MQ-2/MQ-5 原始 ADC 值、火焰模块输入和代码阈值不能替代人工核实、合规检测、报警送达或紧急处置。遇到真实火情、疑似燃气泄漏或其他危险，请立刻离开风险区域并联系当地专业应急服务。

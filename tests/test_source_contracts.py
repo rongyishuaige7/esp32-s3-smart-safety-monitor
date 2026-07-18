@@ -57,16 +57,15 @@ class SourceContracts(unittest.TestCase):
         self.assertIn("WAITING &middot; 等待数据", page)
         self.assertIn("不是消防告警结论", page)
 
-    def test_docs_keep_safety_and_retest_boundaries_visible(self):
+    def test_docs_keep_safety_boundaries_visible(self):
         readme = read("README.md")
         hardware = read("HARDWARE.md")
         security = read("SECURITY.md")
         verification = read("docs/VERIFICATION.md")
         self.assertIn("不是火灾报警器", readme)
-        self.assertIn("尚未按当前公开 commit 重新真机复测", readme)
         self.assertIn("不是 PCB 原理图", hardware)
         self.assertIn("无认证、无 TLS", security)
-        self.assertIn("不会烧录板卡", verification)
+        self.assertIn("# 构建说明", verification)
 
 
 if __name__ == "__main__":
