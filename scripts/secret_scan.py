@@ -17,11 +17,11 @@ PATTERNS = [
     ("GitHub token", re.compile(r"\b(?:gh[opusr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,})\b")),
     ("OpenAI-style key", re.compile(r"\bsk-[A-Za-z0-9_-]{16,}\b")),
     ("private LAN literal", re.compile(r"(?<![\d.])(?:10\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)\d{1,3}\.\d{1,3}(?![\d.])")),
-    ("absolute home path", re.compile(r"(?<![\w.-])/home/(?!rongyi/桌面/(?:智能安全监测系统|esp32-s3-smart-safety-monitor)\b)[^\s`\"']+")),
+    ('absolute home path', re.compile(r"/(?:Users|home)/[A-Za-z0-9_.-]+/")),
     ("fixed public AP password", re.compile(r"(?:WIFI_PASSWORD|AP_PASSWORD|SAFETY_MONITOR_AP_PASSWORD)\s+\"(?!\")[^\"]{8,}\"")),
     ("fixed public AP SSID", re.compile(r"(?:WIFI_SSID|AP_SSID|SAFETY_MONITOR_AP_SSID)\s+\"(?!\")[^\"]{1,}\"")),
 ]
-ALLOWED_PATH_FILES = {"docs/SOURCE_PROVENANCE.md", "scripts/secret_scan.py"}
+ALLOWED_PATH_FILES = set()
 
 
 def tracked_files(root: Path) -> list[Path]:
